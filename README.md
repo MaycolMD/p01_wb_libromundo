@@ -3,10 +3,10 @@
 Este proyecto tiene como objetivo proporcionar la funcionalidad necesaria para que los usuarios puedan vender y comprar libros usados de otros usuarios de manera eficiente y segura.
 
 # Tecnologías Utilizadas
-## JavaScript (Node.js): Se ha utilizado JavaScript como nuestro lenguaje principal de programación para el backend, aprovechando la versatilidad y popularidad de Node.js en el desarrollo web.
-## Mongoose: Para la integración con la base de datos MongoDB, se ha optado por utilizar Mongoose, una herramienta de modelado de objetos MongoDB para Node.js. Esto permite definir esquemas de datos con facilidad y realizar operaciones en la base de datos de manera intuitiva.
-## Git y GitHub: Se ha gestionado el control de versiones del código utilizando Git, y se ha alojado el repositorio en GitHub para facilitar la colaboración entre diferentes miembros y mantener un historial de cambios transparente.
-## Thunder Client: Para probar y depurar las API RESTful, se ha utilizado Thunder Client, una extensión de Visual Studio Code que proporciona un cliente HTTP para realizar solicitudes y recibir respuestas fácilmente.
+1.  JavaScript (Node.js): Se ha utilizado JavaScript como nuestro lenguaje principal de programación para el backend, aprovechando la versatilidad y popularidad de Node.js en el desarrollo web.
+2. Mongoose: Para la integración con la base de datos MongoDB, se ha optado por utilizar Mongoose, una herramienta de modelado de objetos MongoDB para Node.js. Esto permite definir esquemas de datos con facilidad y realizar operaciones en la base de datos de manera intuitiva.
+3. Git y GitHub: Se ha gestionado el control de versiones del código utilizando Git, y se ha alojado el repositorio en GitHub para facilitar la colaboración entre diferentes miembros y mantener un historial de cambios transparente.
+4. Thunder Client: Para probar y depurar las API RESTful, se ha utilizado Thunder Client, una extensión de Visual Studio Code que proporciona un cliente HTTP para realizar solicitudes y recibir respuestas fácilmente.
 
 # Estructura del Proyecto
 El proyecto está estructurado de la siguiente manera:
