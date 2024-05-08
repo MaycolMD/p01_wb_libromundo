@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const schemaUsuario = new mongoose.Schema({
 
-    identificacion: {type: Number, required: true},
+    identificacion: {type: Number, required: true, unique: true},
     nombres: {type: String, required: true},
     apellidos: {type: String, required: true},
     telefono: {type: String, required: false},
