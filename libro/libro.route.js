@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router();
-const { readUsuarioConFiltros, createUsuario, updateUsuario, deleteUsuario } = require("./usuario.controller");
+const { readLibroConFiltros, createLibro, updateLibro, deleteLibro } = require("./libro.controller");
 const { respondWithError } = require('../utils/functions');
 
-async function GetUsuarios(req, res) {
+async function GetLibros(req, res) {
     try {
+
         // llamada a controlador con los filtros
-        const resultadosBusqueda = await readUsuarioConFiltros(req.query);
+        const resultadosBusqueda = await readLibroConFiltros(req.query);
 
         res.status(200).json({
             ...resultadosBusqueda
@@ -16,10 +17,10 @@ async function GetUsuarios(req, res) {
     }
 }
 
-async function PostUsuario(req, res) {
+async function PostLibro(req, res) {
     try {
         // llamada a controlador con los datos
-        await createUsuario(req.body);
+        await createLibro(req.body);
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -30,10 +31,10 @@ async function PostUsuario(req, res) {
 }
 
 
-async function PatchUsuario(req, res) {
+async function PatchLibro(req, res) {
     try {
         // llamada a controlador con los datos
-        updateUsuario(req.body);
+        updateLibro(req.body);
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -44,10 +45,10 @@ async function PatchUsuario(req, res) {
 }
 
 
-async function DeleteUsuario(req, res) {
+async function DeleteLibro(req, res) {
     try {
         // llamada a controlador con los datos
-        deleteUsuario(req.query.identificacion);
+        deleteLibro(req.query._id);
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -57,10 +58,10 @@ async function DeleteUsuario(req, res) {
     }
 }
 
-router.get("/", GetUsuarios);
-router.post("/", PostUsuario);
-router.patch("/", PatchUsuario);
-router.delete("/", DeleteUsuario);
+router.get("/", GetLibros);
+router.post("/", PostLibro);
+router.patch("/", PatchLibro);
+router.delete("/", DeleteLibro);
 
 
 module.exports = router;

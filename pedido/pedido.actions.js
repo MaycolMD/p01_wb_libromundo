@@ -18,15 +18,14 @@ async function createPedidoMongo(datos) {
     return PedidoCreado;
 }
 
-async function updatePedidoMongo(id, cambios) {
-    const resultado = await Pedido.findByIdAndUpdate(id, cambios);
+async function updatePedidoMongo(_id, cambios) {
+    const resultado = await Pedido.findOneAndUpdate({_id}, cambios);
 
     return resultado
 }
 
-async function deletePedidoMongo(id) {
-    const visible = false;
-    const resultado = await Pedido.findByIdAndUpdate(id, visible);
+async function deletePedidoMongo(_id) {
+    const resultado = await Pedido.findOneAndUpdate({_id}, { visible: false });
     
     return resultado;
 }

@@ -18,15 +18,14 @@ async function createLibroMongo(datos) {
     return LibroCreado;
 }
 
-async function updateLibroMongo(id, cambios) {
-    const resultado = await Libro.findByIdAndUpdate(id, cambios);
+async function updateLibroMongo(_id, cambios) {
+    const resultado = await Libro.findOneAndUpdate({_id}, cambios);
 
     return resultado
 }
 
-async function deleteLibroMongo(id) {
-    const visible = false;
-    const resultado = await Libro.findByIdAndUpdate(id, visible);
+async function deleteLibroMongo(_id) {
+    const resultado = await Libro.findOneAndUpdate({_id}, { visible: false });
     
     return resultado;
 }

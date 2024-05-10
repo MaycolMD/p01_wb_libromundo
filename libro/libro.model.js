@@ -10,7 +10,6 @@ const schemaLibro = new mongoose.Schema({
     casa_editorial: {type: String, required: true},
     autor: {type: String, required: true},
     precio: {type: Number, required: true},
-    stock: {type: Number, required: true},
     visible: {type: Boolean, required: true},
 
   }, {

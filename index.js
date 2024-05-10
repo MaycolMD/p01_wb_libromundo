@@ -16,6 +16,12 @@ app.get("/", (req,res) => {
 const rutasUsuario = require("./usuario/usuario.route")
 app.use('/usuario', rutasUsuario);
 
+const rutasPedido = require("./pedido/pedido.route")
+app.use('/pedido', rutasPedido);
+
+const rutasLibro = require("./libro/libro.route")
+app.use('/libro', rutasLibro);
+
 // aqui va la connection string VVVVV
 const MONGO_DB_USER = process.env.MONGO_DB_USER;
 const MONGO_DB_PASSWORD = process.env.MONGO_DB_PASSWORD;
