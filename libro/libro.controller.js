@@ -3,18 +3,18 @@ const { createLibroMongo, getLibroMongo, updateLibroMongo, deleteLibroMongo } = 
 
 async function readLibroConFiltros(query) {
     // hacer llamado a base de datos con el filtro de tipo
-    
-    if(!query.visible){
+
+    if (!query.visible) {
         query.visible = true
     }
-    
+
     const resultadosBusqueda = await getLibroMongo(query);
 
     return resultadosBusqueda;
 }
 
 async function createLibro(datos) {
-    
+
     datos.visible = true;
 
     const LibroCreado = await createLibroMongo(datos);
@@ -22,19 +22,42 @@ async function createLibro(datos) {
 
 }
 
+async function updateLibro(datos) {
+    const { _id, sesion, propietario, ...cambios } = datos;
 
-function updateLibro(datos) {
-    const { _id, ...cambios } = datos;
+    const resultadosBusqueda = await getLibroMongo({ _id, visible: true });
 
-    const LibroActualizado = updateLibroMongo(_id, cambios);
+    const resultado = resultadosBusqueda.resultados[0]
 
-    return LibroActualizado;
+    if (propietario && propietario !== resultado.propietario.toString() ) {
+        throwCustomError(501, "No puede cambiar el propietario así")
+    }
+
+    if (Number(resultado.propietario) === sesion) {
+        const LibroActualizado = updateLibroMongo(_id, cambios);
+
+        return LibroActualizado;
+    } else {
+        throwCustomError(501, "Ese libro no le pertenece, no puede editarlo")
+    }
+
 }
 
-function deleteLibro(id) {
-    const LibroOcultado = deleteLibroMongo(id);
+async function deleteLibro(datos) {
+    const { _id, sesion } = datos;
 
-    return LibroOcultado;
+    const resultadosBusqueda = await getLibroMongo({ _id, visible: true });
+
+    const resultado = resultadosBusqueda.resultados[0]
+
+    if (Number(resultado.propietario) === sesion) {
+        const LibroOcultado = deleteLibroMongo(_id);
+
+        return LibroOcultado;
+    } else {
+        throwCustomError(501, "Ese libro no le pertenece, no puede eliminarlo")
+    }
+
 }
 
 module.exports = {

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const schemaLibro = new mongoose.Schema({
     
     nombre: {type: String, required: true},
-    propietario: {type: String, required: true},
+    propietario: {type: Number, required: true},
     descripcion: {type: String, required: false},
     genero: {type: String, required: true},
     fecha_publicacion: {type: Date, required: true},

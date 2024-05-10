@@ -1,5 +1,8 @@
 const { throwCustomError } = require("../utils/functions");
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
 
 const { createUsuarioMongo, getUsuarioMongo, updateUsuarioMongo, deleteUsuarioMongo } = require("./usuario.actions");
 
@@ -36,7 +39,7 @@ async function createUsuario(datos) {
 
             const usuarioCreado = await createUsuarioMongo(datos);
             return usuarioCreado;
-            
+
         } catch (error) {
             if (error.name === 'ValidationError') {
                 throwCustomError(501, "No deje campos requeridos vacíos");
@@ -44,7 +47,7 @@ async function createUsuario(datos) {
         }
     }
 
-    throwCustomError(501, "Ya existe un usuario con ese nombre");
+    throwCustomError(501, "Ya existe un usuario con esa identificación");
 }
 
 
@@ -62,9 +65,39 @@ function deleteUsuario(id) {
     return usuarioOcultado;
 }
 
+async function iniciarSesion(datos) {
+    const { identificacion, password } = datos;
+
+    try {
+
+        const usuariosFiltros = await getUsuarioMongo({ identificacion, visible: true });
+
+        const usuario = usuariosFiltros.resultados[0];
+
+        if (!usuario) {
+            throwCustomError(401, 'Credenciales invalidas');
+        }
+
+        const contrasenaValida = await argon2.verify(usuario.password, password);
+
+        if (!contrasenaValida) {
+            throwCustomError(401, 'Credenciales invalidas');
+        }
+
+        const secret_key = process.env.SECRET_KEY
+
+        const token = jwt.sign({ email: usuario.email, id: usuario.identificacion }, secret_key, { expiresIn: '1h' });
+
+        return token;
+    } catch (error) {
+        throwCustomError(401, 'Credenciales invalidas o usuario no existente');
+    }
+}
+
 module.exports = {
     readUsuarioConFiltros,
     createUsuario,
     updateUsuario,
-    deleteUsuario
+    deleteUsuario,
+    iniciarSesion
 }

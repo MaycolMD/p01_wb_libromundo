@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const schemaPedido = new mongoose.Schema({
     
-    comprador: {type: String, required: true},
-    vendedor: {type: String, required: true},
+    comprador: {type: Number, required: true},
+    vendedor: {type: Number, required: true},
     libros: {type: [String], required: true},
     fecha_creacion: {type: Date, required: true},
     estado: {type: String, required: true},

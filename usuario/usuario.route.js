@@ -1,7 +1,31 @@
 const express = require('express')
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
+
 const router = express.Router();
-const { readUsuarioConFiltros, createUsuario, updateUsuario, deleteUsuario } = require("./usuario.controller");
+const { readUsuarioConFiltros, createUsuario, updateUsuario, deleteUsuario, iniciarSesion } = require("./usuario.controller");
 const { respondWithError } = require('../utils/functions');
+
+// Middleware de autenticación JWT
+function middlewareAutenticacion(req, res, next) {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ mensaje: 'Token no proporcionado' });
+    }
+
+    const secret_key = process.env.SECRET_KEY
+
+    jwt.verify(token, secret_key, (err, usuario) => {
+        if (err) {
+            return res.status(401).json({ mensaje: 'Token inválido' });
+        }
+
+        req.user = usuario;
+        next(); 
+    });
+}
 
 async function GetUsuarios(req, res) {
     try {
@@ -33,7 +57,7 @@ async function PostUsuario(req, res) {
 async function PatchUsuario(req, res) {
     try {
         // llamada a controlador con los datos
-        updateUsuario(req.body);
+        updateUsuario({...req.body, sesion: req.user.id});
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -47,7 +71,7 @@ async function PatchUsuario(req, res) {
 async function DeleteUsuario(req, res) {
     try {
         // llamada a controlador con los datos
-        deleteUsuario(req.query.identificacion);
+        deleteUsuario(req.user.id);
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -57,10 +81,23 @@ async function DeleteUsuario(req, res) {
     }
 }
 
-router.get("/", GetUsuarios);
+router.post("/login", async (req, res) => {
+    try {
+        const token = await iniciarSesion(req.body);
+        
+        res.status(200).json({ 
+            token 
+        });
+    } catch (error) {
+        respondWithError(res, error);
+    }
+
+});
+
+router.get("/", middlewareAutenticacion, GetUsuarios);
 router.post("/", PostUsuario);
-router.patch("/", PatchUsuario);
-router.delete("/", DeleteUsuario);
+router.patch("/", middlewareAutenticacion, PatchUsuario);
+router.delete("/", middlewareAutenticacion, DeleteUsuario);
 
 
 module.exports = router;
