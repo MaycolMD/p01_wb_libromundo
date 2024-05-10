@@ -29,6 +29,10 @@ async function updateLibro(datos) {
 
     const resultado = resultadosBusqueda.resultados[0]
 
+    if (!resultado) {
+        throwCustomError(401, 'El libro '+ _id + ' no existe');
+    }
+
     if (propietario && propietario !== resultado.propietario.toString() ) {
         throwCustomError(501, "No puede cambiar el propietario así")
     }
@@ -49,6 +53,10 @@ async function deleteLibro(datos) {
     const resultadosBusqueda = await getLibroMongo({ _id, visible: true });
 
     const resultado = resultadosBusqueda.resultados[0]
+
+    if (!resultado) {
+        throwCustomError(401, 'El libro '+ _id + ' no existe');
+    }
 
     if (Number(resultado.propietario) === sesion) {
         const LibroOcultado = deleteLibroMongo(_id);

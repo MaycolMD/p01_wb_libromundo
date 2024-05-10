@@ -35,10 +35,18 @@ async function createPedido(datos) {
     }
 
     const primerLibro = (await getLibroMongo({ _id: libros[0], visible: true })).resultados[0];
+
+    if (!primerLibro) {
+        throwCustomError(401, 'El libro ' + libros[0] + ' no existe');
+    }
+
     const propietarioPrimerLibro = primerLibro.propietario;
 
     for (let i = 1; i < libros.length; i++) {
         const libro = (await getLibroMongo({ _id: libros[i], visible: true })).resultados[0];
+        if (!libro) {
+            throwCustomError(401, 'El libro ' + libros[i] + ' no existe');
+        }
         if (libro.propietario !== propietarioPrimerLibro) {
             throwCustomError(400, "No todos los libros pertenecen al mismo propietario");
         }
@@ -59,6 +67,10 @@ async function updatePedido(datos) {
     }
 
     const pedido = (await getPedidoMongo({ _id, visible: true })).resultados[0];
+
+    if (!pedido) {
+        throwCustomError(401, 'El pedido ' + _id + ' no existe');
+    }
 
     if (sesion === pedido.comprador) {
 
@@ -81,7 +93,7 @@ async function updatePedido(datos) {
                 const libros = pedido.libros;
 
                 for (let i = 0; i < libros.length; i++) {
-                    const libro = (await deleteLibroMongo({ _id: libros[i], visible: true}));
+                    const libro = (await deleteLibroMongo({ _id: libros[i], visible: true }));
                 }
 
             }
@@ -97,10 +109,24 @@ async function updatePedido(datos) {
 }
 
 
-function deletePedido(id) {
-    const PedidoOcultado = deletePedidoMongo(id);
+async function deletePedido(datos) {
+    const { _id, sesion } = datos;
 
-    return PedidoOcultado;
+    const pedido = (await getPedidoMongo({ _id, visible: true })).resultados[0];
+
+    if (!pedido) {
+        throwCustomError(401, 'El pedido ' + _id + ' no existe');
+    }
+
+    if (sesion === pedido.comprador) {
+
+        const PedidoOcultado = deletePedidoMongo(_id);
+        return PedidoOcultado;
+
+    }
+
+    throwCustomError(501, "Usted no compró ese libro, no puede eliminar el pedido");
+
 }
 
 module.exports = {

@@ -71,7 +71,7 @@ async function PatchPedido(req, res) {
 async function DeletePedido(req, res) {
     try {
         // llamada a controlador con los datos
-        deletePedido(req.query._id);
+        await deletePedido({_id: req.query._id, sesion: req.user.id });
 
         res.status(200).json({
             mensaje: "Exito. 👍"
