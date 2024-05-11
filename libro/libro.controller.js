@@ -1,5 +1,5 @@
-const { throwCustomError } = require("../utils/functions");
-const { createLibroMongo, getLibroMongo, updateLibroMongo, deleteLibroMongo } = require("./libro.actions");
+const { throwCustomError } = require("../utils/functions")
+const { createLibroMongo, getLibroMongo, updateLibroMongo, deleteLibroMongo } = require("./libro.actions")
 
 async function readLibroConFiltros(query) {
     // hacer llamado a base de datos con el filtro de tipo
@@ -8,29 +8,29 @@ async function readLibroConFiltros(query) {
         query.visible = true
     }
 
-    const resultadosBusqueda = await getLibroMongo(query);
+    const resultadosBusqueda = await getLibroMongo(query)
 
-    return resultadosBusqueda;
+    return resultadosBusqueda
 }
 
 async function createLibro(datos) {
 
-    datos.visible = true;
+    datos.visible = true
 
-    const LibroCreado = await createLibroMongo(datos);
-    return LibroCreado;
+    const LibroCreado = await createLibroMongo(datos)
+    return LibroCreado
 
 }
 
 async function updateLibro(datos) {
-    const { _id, sesion, propietario, ...cambios } = datos;
+    const { _id, sesion, propietario, ...cambios } = datos
 
-    const resultadosBusqueda = await getLibroMongo({ _id, visible: true });
+    const resultadosBusqueda = await getLibroMongo({ _id, visible: true })
 
     const resultado = resultadosBusqueda.resultados[0]
 
     if (!resultado) {
-        throwCustomError(404, 'El libro '+ _id + ' no existe');
+        throwCustomError(404, 'El libro '+ _id + ' no existe')
     }
 
     if (propietario && propietario !== resultado.propietario.toString() ) {
@@ -38,9 +38,9 @@ async function updateLibro(datos) {
     }
 
     if (Number(resultado.propietario) === sesion) {
-        const LibroActualizado = updateLibroMongo(_id, cambios);
+        const LibroActualizado = updateLibroMongo(_id, cambios)
 
-        return LibroActualizado;
+        return LibroActualizado
     } else {
         throwCustomError(403, "Ese libro no le pertenece, no puede editarlo")
     }
@@ -48,20 +48,20 @@ async function updateLibro(datos) {
 }
 
 async function deleteLibro(datos) {
-    const { _id, sesion } = datos;
+    const { _id, sesion } = datos
 
-    const resultadosBusqueda = await getLibroMongo({ _id, visible: true });
+    const resultadosBusqueda = await getLibroMongo({ _id, visible: true })
 
     const resultado = resultadosBusqueda.resultados[0]
 
     if (!resultado) {
-        throwCustomError(404, 'El libro '+ _id + ' no existe');
+        throwCustomError(404, 'El libro '+ _id + ' no existe')
     }
 
     if (Number(resultado.propietario) === sesion) {
-        const LibroOcultado = deleteLibroMongo(_id);
+        const LibroOcultado = deleteLibroMongo(_id)
 
-        return LibroOcultado;
+        return LibroOcultado
     } else {
         throwCustomError(403, "Ese libro no le pertenece, no puede eliminarlo")
     }

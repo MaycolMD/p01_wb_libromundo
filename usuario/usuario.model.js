@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const schemaUsuario = new mongoose.Schema({
 
@@ -13,8 +13,8 @@ const schemaUsuario = new mongoose.Schema({
   }, {
     versionKey: false,
     timestamps: true
-});
+})
    
-const Model = mongoose.model('Usuario', schemaUsuario);
+const Model = mongoose.model('Usuario', schemaUsuario)
 
-module.exports = Model;
+module.exports = Model

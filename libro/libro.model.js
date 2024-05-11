@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const schemaLibro = new mongoose.Schema({
     
@@ -15,8 +15,8 @@ const schemaLibro = new mongoose.Schema({
   }, {
     versionKey: false,
     timestamps: true
-});
+})
    
-const Model = mongoose.model('Libro', schemaLibro);
+const Model = mongoose.model('Libro', schemaLibro)
 
-module.exports = Model;
+module.exports = Model
