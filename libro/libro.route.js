@@ -72,7 +72,7 @@ async function PatchLibro(req, res) {
 async function DeleteLibro(req, res) {
     try {
         // llamada a controlador con los datos
-        await deleteLibro({_id: req.query._id, sesion: req.user.id})
+        await deleteLibro({_id: req.params._id, sesion: req.user.id})
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -85,7 +85,7 @@ async function DeleteLibro(req, res) {
 router.get("/", GetLibros)
 router.post("/", middlewareAutenticacion, PostLibro)
 router.patch("/", middlewareAutenticacion, PatchLibro)
-router.delete("/", middlewareAutenticacion, DeleteLibro)
+router.delete("/:_id", middlewareAutenticacion, DeleteLibro)
 
 
 module.exports = router

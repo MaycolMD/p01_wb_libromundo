@@ -71,7 +71,7 @@ async function PatchPedido(req, res) {
 async function DeletePedido(req, res) {
     try {
         // llamada a controlador con los datos
-        await deletePedido({_id: req.query._id, sesion: req.user.id })
+        await deletePedido({_id: req.params._id, sesion: req.user.id })
 
         res.status(200).json({
             mensaje: "Exito. 👍"
@@ -84,7 +84,7 @@ async function DeletePedido(req, res) {
 router.get("/", middlewareAutenticacion, GetPedidos)
 router.post("/", middlewareAutenticacion, PostPedido)
 router.patch("/", middlewareAutenticacion, PatchPedido)
-router.delete("/", middlewareAutenticacion, DeletePedido)
+router.delete("/:_id", middlewareAutenticacion, DeletePedido)
 
 
 module.exports = router
