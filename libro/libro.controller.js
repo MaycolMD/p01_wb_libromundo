@@ -30,11 +30,11 @@ async function updateLibro(datos) {
     const resultado = resultadosBusqueda.resultados[0]
 
     if (!resultado) {
-        throwCustomError(401, 'El libro '+ _id + ' no existe');
+        throwCustomError(404, 'El libro '+ _id + ' no existe');
     }
 
     if (propietario && propietario !== resultado.propietario.toString() ) {
-        throwCustomError(501, "No puede cambiar el propietario así")
+        throwCustomError(400, "No puede cambiar el propietario así")
     }
 
     if (Number(resultado.propietario) === sesion) {
@@ -42,7 +42,7 @@ async function updateLibro(datos) {
 
         return LibroActualizado;
     } else {
-        throwCustomError(501, "Ese libro no le pertenece, no puede editarlo")
+        throwCustomError(403, "Ese libro no le pertenece, no puede editarlo")
     }
 
 }
@@ -55,7 +55,7 @@ async function deleteLibro(datos) {
     const resultado = resultadosBusqueda.resultados[0]
 
     if (!resultado) {
-        throwCustomError(401, 'El libro '+ _id + ' no existe');
+        throwCustomError(404, 'El libro '+ _id + ' no existe');
     }
 
     if (Number(resultado.propietario) === sesion) {
@@ -63,7 +63,7 @@ async function deleteLibro(datos) {
 
         return LibroOcultado;
     } else {
-        throwCustomError(501, "Ese libro no le pertenece, no puede eliminarlo")
+        throwCustomError(403, "Ese libro no le pertenece, no puede eliminarlo")
     }
 
 }

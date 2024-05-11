@@ -38,13 +38,13 @@ async function createPedido(datos) {
     const libros = datos.libros;
 
     if (!libros || libros.length === 0) {
-        throwCustomError(400, "La lista de libros está vacía");
+        throwCustomError(422, "La lista de libros está vacía");
     }
 
     const primerLibro = (await getLibroMongo({ _id: libros[0], visible: true })).resultados[0];
 
     if (!primerLibro) {
-        throwCustomError(401, 'El libro ' + libros[0] + ' no existe');
+        throwCustomError(404, 'El libro ' + libros[0] + ' no existe');
     }
 
     const propietarioPrimerLibro = primerLibro.propietario;
@@ -58,7 +58,7 @@ async function createPedido(datos) {
     for (let i = 1; i < libros.length; i++) {
         const libro = (await getLibroMongo({ _id: libros[i], visible: true })).resultados[0];
         if (!libro) {
-            throwCustomError(401, 'El libro ' + libros[i] + ' no existe');
+            throwCustomError(404, 'El libro ' + libros[i] + ' no existe');
         }
         if (libro.propietario !== propietarioPrimerLibro) {
             throwCustomError(400, "No todos los libros pertenecen al mismo propietario");
@@ -80,13 +80,13 @@ async function updatePedido(datos) {
     const otrosCambios = Object.keys(cambios).length > 0;
 
     if (otrosCambios) {
-        throwCustomError(501, "Solo se puede cambiar el estado del pedido.");
+        throwCustomError(400, "Solo se puede cambiar el estado del pedido.");
     }
 
     const pedido = (await getPedidoMongo({ _id, visible: true })).resultados[0];
 
     if (!pedido) {
-        throwCustomError(401, 'El pedido ' + _id + ' no existe');
+        throwCustomError(404, 'El pedido ' + _id + ' no existe');
     }
 
     if (sesion === pedido.comprador) {
@@ -97,7 +97,7 @@ async function updatePedido(datos) {
             return PedidoActualizado;
         }
 
-        throwCustomError(501, "No puedes hacer esta acción");
+        throwCustomError(400, "No puedes hacer esta acción");
     }
 
     if (sesion === pedido.vendedor) {
@@ -118,10 +118,10 @@ async function updatePedido(datos) {
             return PedidoActualizado;
         }
 
-        throwCustomError(501, "No puedes hacer esta acción");
+        throwCustomError(400, "No puedes hacer esta acción");
     }
 
-    throwCustomError(501, "Este pedido no es tuyo");
+    throwCustomError(403, "Este pedido no es tuyo");
 
 }
 
@@ -132,7 +132,7 @@ async function deletePedido(datos) {
     const pedido = (await getPedidoMongo({ _id, visible: true })).resultados[0];
 
     if (!pedido) {
-        throwCustomError(401, 'El pedido ' + _id + ' no existe');
+        throwCustomError(404, 'El pedido ' + _id + ' no existe');
     }
 
     if (sesion === pedido.comprador) {
@@ -142,7 +142,7 @@ async function deletePedido(datos) {
 
     }
 
-    throwCustomError(501, "Usted no compró ese libro, no puede eliminar el pedido");
+    throwCustomError(403, "Usted no compró ese libro, no puede eliminar el pedido");
 
 }
 

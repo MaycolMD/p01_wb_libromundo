@@ -23,7 +23,7 @@ async function createUsuario(datos) {
     const { identificacion, nombres, apellidos, telefono, email, password } = datos;
     
     if (identificacion === undefined) {
-        throwCustomError(501, "Digite su identificación");
+        throwCustomError(400, "Digite su identificación");
     }
 
     const usuarios = await getUsuarioMongo({identificacion});
@@ -42,12 +42,12 @@ async function createUsuario(datos) {
 
         } catch (error) {
             if (error.name === 'ValidationError') {
-                throwCustomError(501, "No deje campos requeridos vacíos");
+                throwCustomError(400, "No deje campos requeridos vacíos");
             }
         }
     }
 
-    throwCustomError(501, "Ya existe un usuario con esa identificación");
+    throwCustomError(409, "Ya existe un usuario con esa identificación");
 }
 
 
@@ -59,7 +59,7 @@ async function updateUsuario(datos) {
     }
 
     if(identificacion && identificacion !== sesion){
-        throwCustomError(501, "No puede cambiar su identificación");
+        throwCustomError(403, "No puede cambiar su identificación");
     }
 
     const usuarioActualizado = updateUsuarioMongo(sesion, cambios);
