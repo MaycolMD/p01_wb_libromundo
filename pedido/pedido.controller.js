@@ -33,6 +33,7 @@ async function readPedidoConFiltros(data) {
 async function createPedido(datos) {
 
     datos.visible = true;
+    let total = 0;
 
     const libros = datos.libros;
 
@@ -48,6 +49,12 @@ async function createPedido(datos) {
 
     const propietarioPrimerLibro = primerLibro.propietario;
 
+    if (primerLibro.propietario === datos.comprador){
+        throwCustomError(400, "No puedes comprar tus mismos libros");
+    }
+
+    total += primerLibro.precio;
+
     for (let i = 1; i < libros.length; i++) {
         const libro = (await getLibroMongo({ _id: libros[i], visible: true })).resultados[0];
         if (!libro) {
@@ -56,9 +63,13 @@ async function createPedido(datos) {
         if (libro.propietario !== propietarioPrimerLibro) {
             throwCustomError(400, "No todos los libros pertenecen al mismo propietario");
         }
+        if (libro.propietario === datos.comprador){
+            throwCustomError(400, "No puedes comprar tus mismos libros");
+        }
+        total += libro.precio;
     }
 
-    const PedidoCreado = await createPedidoMongo({ ...datos, vendedor: propietarioPrimerLibro, estado: 'en progreso' });
+    const PedidoCreado = await createPedidoMongo({ ...datos, vendedor: propietarioPrimerLibro, estado: 'en progreso' , total: total});
     return PedidoCreado;
 
 }

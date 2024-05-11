@@ -57,7 +57,7 @@ async function PostUsuario(req, res) {
 async function PatchUsuario(req, res) {
     try {
         // llamada a controlador con los datos
-        updateUsuario({...req.body, sesion: req.user.id});
+        await updateUsuario({...req.body, sesion: req.user.id});
 
         res.status(200).json({
             mensaje: "Exito. 👍"

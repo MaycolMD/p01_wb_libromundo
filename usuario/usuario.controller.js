@@ -58,6 +58,10 @@ async function updateUsuario(datos) {
         cambios.password = await argon2.hash(cambios.password);
     }
 
+    if(identificacion && identificacion !== sesion){
+        throwCustomError(501, "No puede cambiar su identificación");
+    }
+
     const usuarioActualizado = updateUsuarioMongo(sesion, cambios);
 
     return usuarioActualizado;
