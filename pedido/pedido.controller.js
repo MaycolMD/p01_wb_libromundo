@@ -2,7 +2,9 @@ const { throwCustomError } = require("../utils/functions");
 const { createPedidoMongo, getPedidoMongo, updatePedidoMongo, deletePedidoMongo } = require("./Pedido.actions");
 const { getLibroMongo, deleteLibroMongo } = require("./../libro/libro.actions");
 
-async function readPedidoConFiltros(query) {
+async function readPedidoConFiltros(data) {
+    const {sesion, ...query} = data
+
     if (!query.visible) {
         query.visible = true;
     }
@@ -19,7 +21,11 @@ async function readPedidoConFiltros(query) {
         delete query.finalDate;
     }
 
-    const resultadosBusqueda = await getPedidoMongo(query);
+    const resultadosBusqueda = await getPedidoMongo({ 
+        $or: [
+            { comprador: sesion },
+            { vendedor: sesion }
+        ], ...query});
 
     return resultadosBusqueda;
 }

@@ -51,10 +51,14 @@ async function createUsuario(datos) {
 }
 
 
-function updateUsuario(datos) {
-    const { _id, identificacion, ...cambios } = datos;
+async function updateUsuario(datos) {
+    const { _id, identificacion, sesion, ...cambios } = datos;
 
-    const usuarioActualizado = updateUsuarioMongo(identificacion, cambios);
+    if (cambios.password) {
+        cambios.password = await argon2.hash(cambios.password);
+    }
+
+    const usuarioActualizado = updateUsuarioMongo(sesion, cambios);
 
     return usuarioActualizado;
 }

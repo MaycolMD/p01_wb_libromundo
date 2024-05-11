@@ -30,7 +30,7 @@ function middlewareAutenticacion(req, res, next) {
 async function GetPedidos(req, res) {
     try {
         // llamada a controlador con los filtros
-        const resultadosBusqueda = await readPedidoConFiltros(req.query);
+        const resultadosBusqueda = await readPedidoConFiltros({...req.query, sesion: req.user.id});
 
         res.status(200).json({
             ...resultadosBusqueda
